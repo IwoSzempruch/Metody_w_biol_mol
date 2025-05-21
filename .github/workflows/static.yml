@@ -1,0 +1,33 @@
+name: Deploy single HTML to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # Jeśli Twój plik nazywa się slides_as_html.html,
+      # kopiujemy go do index.html, by GitHub Pages zadziałało automatycznie:
+      - name: Prepare index.html
+        run: |
+          cp slides_as_html.html index.html
+
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: index.html
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
